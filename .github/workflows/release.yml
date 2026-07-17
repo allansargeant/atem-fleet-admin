@@ -1,0 +1,70 @@
+name: release
+
+# Build Electron installers for Windows, macOS and Linux (x64 + arm64).
+# Each OS runner packages both arches from electron-builder.yml.
+# Trigger manually (Actions > release > Run workflow) or by pushing a v* tag.
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: linux, os: ubuntu-latest, platform: '--linux' }
+          - { name: windows, os: windows-latest, platform: '--win' }
+          - { name: macos, os: macos-14, platform: '--mac' }
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile (electron-vite)
+        run: npx electron-vite build
+
+      - name: Package (electron-builder)
+        run: npx electron-builder ${{ matrix.platform }} --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: atem-fleet-admin-${{ matrix.name }}
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.zip
+            dist/*.deb
+            dist/*.rpm
+            dist/*.AppImage
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true

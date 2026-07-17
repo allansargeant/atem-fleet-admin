@@ -428,7 +428,11 @@ export function DveTab({ device }: TabProps): React.JSX.Element {
   return (
     <div className="tab-grid">
       <Field label="Fill source">
-        <Select value={d.fillSource} options={sources} onChange={(fillSource) => set({ fillSource })} />
+        <Select
+          value={d.fillSource}
+          options={sources}
+          onChange={(fillSource) => set({ fillSource })}
+        />
       </Field>
       <Field label="Position X">
         <NumberInput value={d.positionX} step={0.1} onChange={(positionX) => set({ positionX })} />
@@ -437,10 +441,22 @@ export function DveTab({ device }: TabProps): React.JSX.Element {
         <NumberInput value={d.positionY} step={0.1} onChange={(positionY) => set({ positionY })} />
       </Field>
       <Field label="Size X">
-        <NumberInput value={d.sizeX} min={0} max={1} step={0.01} onChange={(sizeX) => set({ sizeX })} />
+        <NumberInput
+          value={d.sizeX}
+          min={0}
+          max={1}
+          step={0.01}
+          onChange={(sizeX) => set({ sizeX })}
+        />
       </Field>
       <Field label="Size Y">
-        <NumberInput value={d.sizeY} min={0} max={1} step={0.01} onChange={(sizeY) => set({ sizeY })} />
+        <NumberInput
+          value={d.sizeY}
+          min={0}
+          max={1}
+          step={0.01}
+          onChange={(sizeY) => set({ sizeY })}
+        />
       </Field>
       <Field label="Mask">
         <Toggle

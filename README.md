@@ -12,6 +12,8 @@ ATEMs in one place, build each device's configuration through model-aware forms
 Built with electron-vite + React + TypeScript, matching the stack of its sibling
 [animATEM](https://github.com/allansargeant/animATEM).
 
+![Architecture](docs/architecture.svg)
+
 ## Why
 
 Configuring ATEMs one at a time in ATEM Software Control — input/output names,
@@ -25,19 +27,19 @@ Each device is assigned a model. The editor shows only the tabs and options that
 model supports, and the XML generator only emits the sections it has. Phase 1
 ships two profiles spanning the two hardware classes:
 
-| Capability            | ATEM Mini Extreme ISO | ATEM 4 M/E Broadcast Studio 4K |
-| --------------------- | :-------------------: | :----------------------------: |
-| Input / output names  |          ✅           |               ✅               |
-| Output routing (AUX)  |          ✅           |               ✅               |
-| UVC / USB-C output    |          ✅           |               —                |
-| Default transition    |          ✅           |               ✅               |
-| Fade to black         |          ✅           |               ✅               |
-| DVE                   |          ✅           |               ✅               |
-| Media pool + players  |          ✅           |               ✅               |
-| Streaming             |          ✅           |               —                |
-| Recording (bitrate/ISO) |        ✅           |               —                |
-| SuperSource           |          —            |               ✅               |
-| Multi-M/E             |          —            |          ✅ (4 M/E)            |
+| Capability              | ATEM Mini Extreme ISO | ATEM 4 M/E Broadcast Studio 4K |
+| ----------------------- | :-------------------: | :----------------------------: |
+| Input / output names    |          ✅           |               ✅               |
+| Output routing (AUX)    |          ✅           |               ✅               |
+| UVC / USB-C output      |          ✅           |               —                |
+| Default transition      |          ✅           |               ✅               |
+| Fade to black           |          ✅           |               ✅               |
+| DVE                     |          ✅           |               ✅               |
+| Media pool + players    |          ✅           |               ✅               |
+| Streaming               |          ✅           |               —                |
+| Recording (bitrate/ISO) |          ✅           |               —                |
+| SuperSource             |           —           |               ✅               |
+| Multi-M/E               |           —           |           ✅ (4 M/E)           |
 
 Adding a model is a single new entry in [`src/shared/models.ts`](src/shared/models.ts).
 

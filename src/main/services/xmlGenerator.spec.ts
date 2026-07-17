@@ -25,7 +25,9 @@ describe('generateDeviceXml — big switcher (ATEM 4 M/E)', () => {
   })
 
   it('names inputs with shortName capped at 4 chars and externalPortType', () => {
-    expect(xml).toContain('<Input id="1" shortName="CAM1" longName="Camera 1" externalPortType="SDI"/>')
+    expect(xml).toContain(
+      '<Input id="1" shortName="CAM1" longName="Camera 1" externalPortType="SDI"/>'
+    )
   })
 
   it('writes FadeToBlack using isFullyBlack (matching autosave) and ftbEnabled on Settings', () => {

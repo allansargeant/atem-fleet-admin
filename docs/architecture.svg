@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 560" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#4b8bff"/>
+    </marker>
+    <style>
+      .box { fill: #1e2129; stroke: #2a2e38; rx: 10; }
+      .accent { stroke: #4b8bff; }
+      .title { fill: #e6e8ee; font-weight: 600; }
+      .sub { fill: #8b90a0; font-size: 12px; }
+      .lbl { fill: #4b8bff; font-size: 11px; font-weight: 600; }
+      .flow { stroke: #4b8bff; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="920" height="560" fill="#0f1013"/>
+  <text x="40" y="46" class="title" font-size="22">ATEM Fleet Admin — data flow</text>
+  <text x="40" y="70" class="sub">One config model, two output paths, gated by per-model capability profiles.</text>
+
+  <!-- Model profiles -->
+  <rect x="40" y="110" width="220" height="90" class="box" rx="10"/>
+  <text x="60" y="140" class="title" font-size="15">Model profiles</text>
+  <text x="60" y="162" class="sub">src/shared/models.ts</text>
+  <text x="60" y="182" class="sub">capabilities per ATEM model</text>
+
+  <!-- Config model (center source of truth) -->
+  <rect x="350" y="100" width="240" height="110" class="box accent" rx="10" stroke-width="2"/>
+  <text x="370" y="132" class="title" font-size="16">Device config</text>
+  <text x="370" y="154" class="sub">src/shared/config.ts</text>
+  <text x="370" y="174" class="sub">single source of truth</text>
+  <text x="370" y="194" class="sub">FleetProject → DeviceConfig[]</text>
+
+  <!-- Editor -->
+  <rect x="350" y="260" width="240" height="90" class="box" rx="10"/>
+  <text x="370" y="290" class="title" font-size="15">Capability-gated editor</text>
+  <text x="370" y="312" class="sub">React tabbed UI — tabs shown</text>
+  <text x="370" y="330" class="sub">only for supported features</text>
+
+  <!-- gating arrow -->
+  <path d="M260,155 L348,155" class="flow" marker-end="url(#arrow)"/>
+  <text x="268" y="146" class="lbl">gates</text>
+  <path d="M470,260 L470,212" class="flow" marker-end="url(#arrow)"/>
+  <text x="478" y="240" class="lbl">edits</text>
+
+  <!-- Path 1: XML / folders -->
+  <rect x="660" y="90" width="220" height="70" class="box" rx="10"/>
+  <text x="680" y="118" class="title" font-size="14">xmlGenerator → folders</text>
+  <text x="680" y="140" class="sub">config.xml + Media/ per device</text>
+
+  <rect x="660" y="180" width="220" height="60" class="box" rx="10"/>
+  <text x="680" y="208" class="title" font-size="14">ATEM Software Control</text>
+  <text x="680" y="228" class="sub">manual Load + media pool</text>
+
+  <path d="M590,140 L658,125" class="flow" marker-end="url(#arrow)"/>
+  <text x="600" y="120" class="lbl">generate</text>
+  <path d="M770,160 L770,178" class="flow" marker-end="url(#arrow)"/>
+
+  <!-- Path 2: network apply -->
+  <rect x="660" y="300" width="220" height="70" class="box" rx="10"/>
+  <text x="680" y="328" class="title" font-size="14">networkApply</text>
+  <text x="680" y="350" class="sub">atem-connection setter plan</text>
+
+  <rect x="660" y="390" width="220" height="60" class="box" rx="10"/>
+  <text x="680" y="418" class="title" font-size="14">Live switcher</text>
+  <text x="680" y="438" class="sub">settable subset over Ethernet</text>
+
+  <path d="M590,165 L658,320" class="flow" marker-end="url(#arrow)"/>
+  <text x="600" y="250" class="lbl">connect &amp; apply</text>
+  <path d="M770,370 L770,388" class="flow" marker-end="url(#arrow)"/>
+
+  <text x="40" y="500" class="sub">Folder export = highest fidelity (matches real ATEM save XML). Live apply = fast, but protocol-limited;</text>
+  <text x="40" y="520" class="sub">unreachable fields (media uploads, UVC routing, recording bitrate) are reported as folder-export only.</text>
+</svg>

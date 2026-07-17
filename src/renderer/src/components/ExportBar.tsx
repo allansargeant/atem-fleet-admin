@@ -17,7 +17,8 @@ export function ExportBar({ device }: { device: DeviceConfig | null }): React.JS
     try {
       const result = await window.api.export.toFolders(fleet)
       setExportResult(result)
-      if (result) setMessage(`Wrote ${result.devices.length} device folder(s) to ${result.outputDir}`)
+      if (result)
+        setMessage(`Wrote ${result.devices.length} device folder(s) to ${result.outputDir}`)
     } catch (err) {
       setMessage(err instanceof Error ? err.message : String(err))
     } finally {
@@ -44,7 +45,11 @@ export function ExportBar({ device }: { device: DeviceConfig | null }): React.JS
   return (
     <div className="export-bar">
       <div className="export-actions">
-        <button className="primary" disabled={!!busy || fleet.devices.length === 0} onClick={generate}>
+        <button
+          className="primary"
+          disabled={!!busy || fleet.devices.length === 0}
+          onClick={generate}
+        >
           {busy === 'export' ? 'Generating…' : 'Generate folders'}
         </button>
         <button disabled={!!busy || !device || !device.address} onClick={apply}>

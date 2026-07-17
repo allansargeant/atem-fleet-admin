@@ -38,7 +38,12 @@ const TABS: TabDef[] = [
     render: (d) => <TransitionsTab device={d} />,
     enabled: always
   },
-  { id: 'dve', label: 'DVE', render: (d) => <DveTab device={d} />, enabled: (d) => getModelProfile(d.model).capabilities.dve },
+  {
+    id: 'dve',
+    label: 'DVE',
+    render: (d) => <DveTab device={d} />,
+    enabled: (d) => getModelProfile(d.model).capabilities.dve
+  },
   {
     id: 'supersource',
     label: 'SuperSource',
