@@ -81,19 +81,46 @@ silently.
 > reconstructed from the protocol and should be validated against a real Mini.
 > The live **Connect & apply** path is the authoritative route for those fields.
 
+## Two ways to run it
+
+The same tool ships as **two targets** from this one repo, sharing all the
+provisioning logic (`src/shared` + `src/main/services`):
+
+1. **Electron desktop app** — the native app (`npm run dev`), packaged as
+   installers on the main release. Uses IPC + native file dialogs.
+2. **Web app + av-launcher tray shell** — a local Node server (`src/server`)
+   serving the same React UI in the browser, wrapped by the fleet's
+   [av-launcher](https://github.com/allansargeant/av-launcher) shell so it lives
+   in the menu bar (pick interface + port, Start/Stop, Open). Ships as a
+   self-contained desktop app with an embedded Node runtime — see
+   [`launcher/`](launcher). This matches how the sibling
+   [atem-overseer](https://github.com/allansargeant/atem-overseer) ships.
+
+The React UI is identical across both; only `window.api` differs (Electron IPC
+vs HTTP — see [`src/web/webApi.ts`](src/web/webApi.ts)).
+
 ## Develop
 
 ```bash
 npm install
+
+# Electron target
 npm run dev          # launch the Electron app
-npm run preview:web  # browser-only UI preview (no Electron) on :5199
-npm test             # vitest unit tests (XML generator, exporter, network apply)
-npm run typecheck
 npm run build        # electron-vite production build
+
+# Web target
+npm run server:dev   # run the web server (tsx watch) on :4720
+npm run preview:web  # vite dev server for the web UI on :5199 (proxies /api → :4720)
+npm run web          # build web + server, then serve at http://localhost:4720
+
+# Shared
+npm test             # vitest unit tests (XML generator, exporter, network apply)
+npm run typecheck    # node (electron) + web + server
 ```
 
-Package installers: `npm run build:mac` / `build:win` / `build:linux`
-(win/mac/linux × x64/arm64 via electron-builder).
+Electron installers: `npm run build:mac` / `build:win` / `build:linux`
+(win/mac/linux × x64/arm64 via electron-builder). The av-launcher desktop app is
+built by `.github/workflows/release-desktop.yml` (see [`launcher/README.md`](launcher/README.md)).
 
 ## Architecture
 

@@ -1,0 +1,36 @@
+# ATEM Fleet Admin desktop app config.
+#
+# ATEM Fleet Admin's web target is a Node app, so this bundle embeds BOTH a
+# self-contained Node runtime (`node`) and the whole app (compiled server + built
+# web UI). The staged layout mirrors what the server expects at runtime — it
+# resolves the web build via `../web` relative to its own dir — so the
+# __dirname-relative paths resolve unchanged. {resource} = the .app resource dir.
+# Fully standalone: nothing needs to be installed on the machine.
+
+[app]
+name = "ATEM Fleet Admin"
+command = "{resource}/node"
+args = ["{resource}/atem-fleet-admin-app/server/index.js"]
+url = "http://{host}:{port}/"
+default_port = 4720
+# cwd omitted -> runs from the writable app-config dir (where exports/ is created).
+
+[inject]
+mode = "env"
+
+[inject.env]
+ATEM_FLEET_ADMIN_PORT = "{port}"
+ATEM_FLEET_ADMIN_HOST = "{host}"
+
+# Palette mirrored from ATEM Fleet Admin's web UI (near-black + blue accent).
+[app.theme]
+bg = "#0f1013"
+panel = "#17191f"
+"panel-2" = "#1e2129"
+border = "#2a2e38"
+text = "#e6e8ee"
+muted = "#8b90a0"
+dim = "#5b616b"
+accent = "#4b8bff"
+"accent-soft" = "#122036"
+good = "#47c26a"
