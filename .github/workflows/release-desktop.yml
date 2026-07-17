@@ -1,17 +1,13 @@
 name: release-desktop
 
 # Builds the ATEM Fleet Admin desktop tray app (av-launcher shell + embedded Node
-# runtime + built web app) for macOS (arm64 + x86_64) and attaches the installers
-# to the release created by release.yml.
-#
-# macOS only: on Windows/Linux the av-launcher shell has bundling issues (the
-# embedded runtime is node.exe not node; AppImage/linuxdeploy needs FUSE), and
-# those platforms are already fully covered by the native Electron installers
-# (release.yml). So the tray app is a macOS convenience; everyone else uses the
-# Electron build.
+# runtime + built web app) for macOS (arm64 + x86_64), Windows (x86_64) and Linux
+# (x86_64), and attaches the installers to the release created by release.yml.
 #
 # macOS x86_64 is cross-compiled on the Apple-Silicon runner (macos-14) — the
-# Intel macOS runners are retired, so we never use macos-13.
+# Intel macOS runners are retired, so we never use macos-13. Linux AppImage runs
+# linuxdeploy with APPIMAGE_EXTRACT_AND_RUN=1 so it doesn't need FUSE on the
+# runner; Windows resolves the embedded node.exe via the shell's exe fallback.
 #
 # Installers are unsigned by default. If the Apple signing/notarization secrets
 # are configured (see launcher/SIGNING.md) the macOS jobs produce a signed +
@@ -51,6 +47,18 @@ jobs:
               rust_target: x86_64-apple-darwin,
               tauri_target: x86_64-apple-darwin
             }
+          - {
+              name: windows-x86_64,
+              os: windows-latest,
+              node_platform: win-x64,
+              rust_target: x86_64-pc-windows-msvc
+            }
+          - {
+              name: linux-x86_64,
+              os: ubuntu-22.04,
+              node_platform: linux-x64,
+              rust_target: x86_64-unknown-linux-gnu
+            }
     steps:
       - uses: actions/checkout@v4
 
@@ -61,6 +69,12 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.rust_target }}
+
+      - name: Linux system dependencies
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: Decide macOS signing
         id: cfg
@@ -116,6 +130,15 @@ jobs:
       - name: Build desktop bundle (unsigned macOS)
         if: startsWith(matrix.os, 'macos') && steps.cfg.outputs.signing != 'true'
         run: cd launcher && npm run tauri build -- --target ${{ matrix.tauri_target }}
+
+      - name: Build desktop bundle (Windows / Linux)
+        if: ${{ !startsWith(matrix.os, 'macos') }}
+        env:
+          # linuxdeploy is itself an AppImage; extract-and-run avoids needing
+          # FUSE on the runner. Harmless on Windows.
+          APPIMAGE_EXTRACT_AND_RUN: 1
+          NO_STRIP: true
+        run: cd launcher && npm run tauri build
 
       - name: Collect installers
         shell: bash
