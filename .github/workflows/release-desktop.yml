@@ -5,9 +5,10 @@ name: release-desktop
 # (x86_64), and attaches the installers to the release created by release.yml.
 #
 # macOS x86_64 is cross-compiled on the Apple-Silicon runner (macos-14) — the
-# Intel macOS runners are retired, so we never use macos-13. Linux AppImage runs
-# linuxdeploy with APPIMAGE_EXTRACT_AND_RUN=1 so it doesn't need FUSE on the
-# runner; Windows resolves the embedded node.exe via the shell's exe fallback.
+# Intel macOS runners are retired, so we never use macos-13. Windows resolves the
+# embedded node.exe via the shell's exe fallback. Linux ships .deb + .rpm (the
+# tray app skips AppImage, whose linuxdeploy step needs FUSE on the runner; a
+# Linux AppImage is already provided by the Electron build in release.yml).
 #
 # Installers are unsigned by default. If the Apple signing/notarization secrets
 # are configured (see launcher/SIGNING.md) the macOS jobs produce a signed +
@@ -133,11 +134,6 @@ jobs:
 
       - name: Build desktop bundle (Windows / Linux)
         if: ${{ !startsWith(matrix.os, 'macos') }}
-        env:
-          # linuxdeploy is itself an AppImage; extract-and-run avoids needing
-          # FUSE on the runner. Harmless on Windows.
-          APPIMAGE_EXTRACT_AND_RUN: 1
-          NO_STRIP: true
         run: cd launcher && npm run tauri build
 
       - name: Collect installers

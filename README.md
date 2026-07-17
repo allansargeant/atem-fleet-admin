@@ -95,8 +95,7 @@ provisioning logic (`src/shared` + `src/main/services`):
    self-contained desktop app with an embedded Node runtime — see
    [`launcher/`](launcher). This matches how the sibling
    [atem-overseer](https://github.com/allansargeant/atem-overseer) ships. The
-   released tray app is **macOS-only**; Windows and Linux are covered by the
-   native Electron installers above.
+   tray app ships for macOS, Windows and Linux (`.deb`/`.rpm`).
 
 The React UI is identical across both; only `window.api` differs (Electron IPC
 vs HTTP — see [`src/web/webApi.ts`](src/web/webApi.ts)).

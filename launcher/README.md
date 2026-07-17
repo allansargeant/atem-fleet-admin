@@ -6,13 +6,10 @@ system tray. Built with [Tauri v2](https://tauri.app) using the fleet's reusable
 [av-launcher](https://github.com/allansargeant/av-launcher) shell.
 
 Download an installer from
-[Releases](https://github.com/allansargeant/atem-fleet-admin/releases).
-
-> **macOS only.** The released tray app is built for macOS (arm64 + x86_64).
-> Windows and Linux users get the native **Electron** installers on the main
-> release instead — the av-launcher shell's Node embedding hits platform
-> bundling issues there that the Electron build sidesteps. `prepare.sh` still
-> supports staging any platform locally.
+[Releases](https://github.com/allansargeant/atem-fleet-admin/releases):
+macOS `.dmg` (arm64 + x86_64), Windows `.exe`, Linux `.deb` + `.rpm`. (A Linux
+`.AppImage` is provided by the main **Electron** build instead — the tray app
+skips it, since its bundler needs FUSE on CI.)
 
 > **Fully self-contained.** Because ATEM Fleet Admin's web target is a Node app,
 > this bundle embeds a Node runtime **and** the whole app (server + built web
